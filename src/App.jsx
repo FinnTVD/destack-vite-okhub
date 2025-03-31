@@ -8,70 +8,23 @@ export default function App() {
       <style>{`body { margin: 0 }`}</style>
       <StudioEditor
         options={{
-          licenseKey: "YOUR_LICENSE_KEY",
-          project: { type: "web" },
+          licenseKey:
+            "24ba99ffa23a4f60af6e1cd1c860deb04bf02ddf43f546d8a432bf0da3c9c666",
+          theme: "light",
+          project: {
+            type: "web",
+            // TODO: replace with a unique id for your projects. e.g. an uuid
+            id: "UNIQUE_PROJECT_ID",
+          },
+          identity: {
+            // TODO: replace with a unique id for your end users. e.g. an uuid
+            id: "UNIQUE_END_USER_ID",
+          },
           assets: {
-            storageType: "self",
-            onUpload: async ({ files }) => {
-              try {
-                const body = new FormData();
-                files.forEach((file) => body.append("files", file));
-
-                const response = await fetch("http://localhost:5555/upload", {
-                  method: "POST",
-                  body,
-                });
-
-                if (!response.ok) {
-                  throw new Error("Upload failed");
-                }
-
-                return await response.json();
-              } catch (error) {
-                console.error("Upload error:", error);
-                return [];
-              }
-            },
-            onDelete: async ({ assets }) => {
-              try {
-                await fetch("http://localhost:5555/delete", {
-                  method: "DELETE",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(assets),
-                });
-              } catch (error) {
-                console.error("Delete error:", error);
-              }
-            },
+            storageType: "cloud",
           },
           storage: {
-            type: "self",
-            onSave: async ({ project }) => {
-              try {
-                await fetch("http://localhost:5555/save", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ project }),
-                });
-              } catch (error) {
-                console.error("Save error:", error);
-              }
-            },
-            onLoad: async () => {
-              try {
-                const response = await fetch("http://localhost:5555/load");
-
-                if (!response.ok) {
-                  throw new Error("Load failed");
-                }
-
-                const { project } = await response.json();
-                return { project };
-              } catch (error) {
-                console.error("Load error:", error);
-                return { project: null };
-              }
-            },
+            type: "cloud",
             autosaveChanges: 100,
             autosaveIntervalMs: 10000,
           },
